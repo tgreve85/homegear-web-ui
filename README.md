@@ -9,10 +9,12 @@ cd /var/lib/homegear/www/rpc
 git clone https://github.com/tgreve85/homegear-web-ui.git
 ```
 
-and set up your devices in the config.js as described.
+and set up your devices in the `/var/lib/homegear/www/rpc/homegear-web-ui/config.js` as described.
 
 
-The login-credentials are the same as in homegear (default: homegear:homegear)
+The login-credentials are the same as in homegear
+
+(default: homegear:homegear)
 
 After you have completed your setup in config.js, you can reach your web-ui under:
 
