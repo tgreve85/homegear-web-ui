@@ -37,6 +37,7 @@ optional parameters for peers:
 	readOnly:		(Boolean)	shall the value be editable or just displayed	(Default: false)
 	valueDimension:	(String)	the Dimension of the value.						(Default: '')
 	decimalPoints:	(Integer)	the decimalplaces of the value.					(Default: 0)
+	influxdbQuery:	(String)	the influxdb-query for the chart				(Default: '')
 */
 
 
@@ -101,8 +102,23 @@ _peerObjects.push({
 	room: _rooms.Allgemein,
 	category: _caterogies.Uebersicht,
 	readOnly: true,
-	valueDimension: 'W'
+	valueDimension: 'W',
+	influxdbQuery: 'SELECT mean("value") FROM "Wirkleistung_Gesamt" WHERE time >= now() - 1d GROUP BY time(1m);'
 });
+
+/*_peerObjects.push({
+	name: 'Außentemperatur',
+	id: 0,
+	channel: -1,
+	variableName: 'AußentemperaturChart',
+	elementType: _elementTypes.chart,
+	room: _rooms.Allgemein,
+	category: _caterogies.Uebersicht,
+	readOnly: true,
+	valueDimension: '°C',
+	decimalPoints: 1,
+	influxdbQuery: 'SELECT mean("value") FROM "Isttemperatur_Aussen" WHERE time >= now() - 1d GROUP BY time(1m);'
+});*/
 
 // Übersicht }}}
 

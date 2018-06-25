@@ -32,6 +32,9 @@ function createRooms()
 			if (peer.decimalPoints === undefined)
 				_peerObjects[i].decimalPoints = 0;
 			
+			if (peer.influxdbQuery === undefined)
+				_peerObjects[i].influxdbQuery = '';
+			
 			if ((peer.room == value) && (categories.indexOf(peer.category.name) == -1))
 			{
 				html += '<li ' + (categories.length == 0 ? 'class="active"' : '') + '> <a href="#' + key + peer.category.name + '" data-toggle="tab"><span class="glyphicon ' + peer.category.icon + '"></span> ' + peer.category.name + '</a></li>';
@@ -101,6 +104,78 @@ function createRooms()
 						html += '<div class="col-sm-6"> \
 									<div class="form-group"> \
 										<div id="' + peer.elementid + '" style="width: 100%; height: 300px;"></div> \
+										<SKRIPT type="text/javascript"> \
+											var chart = Highcharts.chart("' + peer.elementid + '", { \
+												chart: { \
+													zoomType: "x", \
+													events: { \
+														load: updateLegendLabel \
+													} \
+												}, \
+												title: { \
+													text: "' + peer.name + '" \
+												}, \
+												xAxis: { \
+													type: "datetime", \
+													dateTimeLabelFormats: { \
+														millisecond: "%H: %M: %S.%L", \
+														second: "%H: %M: %S", \
+														minute: "%H: %M", \
+														hour: "%H: %M", \
+														day: "%e.%b.", \
+														week: "%e.%b.", \
+														month: "%b.%y", \
+														year: "%Y" \
+													}, \
+													events: { \
+														afterSetExtremes: updateLegendLabel \
+													} \
+												}, \
+												scrollbar: { \
+													enabled: true \
+												}, \
+												yAxis: { \
+													title: { \
+														text: "' + peer.valueDimension + '" \
+													} \
+												}, \
+												tooltip: { \
+													formatter: function () { \
+														var dimension = this.series.userOptions.dimension; \
+														var decimals = Number(this.series.userOptions.decimals); \
+														return \'<span style="font-size: 0.9em;">\' + getdatum(new Date(this.x)) + \'</span><br /> \' + \
+																this.series.name + \': \' + \'<b>\' + Number(this.y).toFixed(decimals) + \' \' + dimension + \'</b>\' \
+													} \
+												}, \
+												legend: { \
+													enabled: true, \
+													useHTML: true, \
+													align: "left", \
+												}, \
+												mapNavigation: { \
+													enableMouseWheelZoom: true \
+												}, \
+												plotOptions: { \
+													line: { \
+														dataLabels: { \
+															enabled: true \
+														}, \
+														enableMouseTracking: false \
+													} \
+												}, \
+												time: { \
+													timezoneOffset: _highchartsTimezoneOffset \
+												}, \
+												series: [{ \
+													name: "' + peer.name + '", \
+													type: "spline", \
+													dimension: "' + peer.valueDimension + '", \
+													decimals: ' + peer.decimalPoints + ', \
+													data: [] \
+												}] \
+											}); \
+											_charts.push({ name: "' + peer.elementid + '", chart: chart }); \
+										</SKRIPT> \
 									</div> \
 								</div>';
 					}
@@ -129,44 +204,10 @@ function createRooms()
 	<footer> \
 		<p>&copy; 2014-2015 Homegear UG</p> \
 	</footer>';
+	
+	html = html.replace(/SKRIPT/g, "script");  //workarround, da script-tags nicht im string-concat zugelassen sind
 	$('#mainContainer').html(html);
 }
-
-
-function handleHomegearValueChanged(peer, variableValue)
-{
-	if (peer.elementType == _elementTypes.slider)
-	{
-		$("#" + peer.elementid).val(variableValue);
-		$("#" + peer.elementid).parent().find('output').val(variableValue + " %");
-	}
-	else if (peer.elementType == _elementTypes.switchButton)
-		$("#" + peer.elementid).switchButton({ checked: variableValue });
-	else if (peer.elementType == _elementTypes.knob)
-		$("#" + peer.elementid).val(variableValue).trigger('change');
-	else if (peer.elementType == _elementTypes.lightbulbSwitch)
-	{
-		if (variableValue)
-			$("#" + peer.elementid).css('color', _colorlightbulbSwitchActive);
-		else
-			$("#" + peer.elementid).css('color', _colorlightbulbSwitchInActive);
-	}
-	else if (peer.elementType == _elementTypes.text)
-	{
-		var suffix = $("#" + peer.elementid).data("suffix");
-		var decimals = $("#" + peer.elementid).data("decimals");
-		
-		if (decimals !== undefined)
-			variableValue = variableValue.toFixed(Number(decimals));;
-		if (suffix !== undefined)
-			variableValue += suffix;
-		$("#" + peer.elementid).text(variableValue);
-	}
-	else
-		$("#" + peer.elementid).val(variableValue);
-}
-
-
 
 function updateLegendLabel()
 {
@@ -211,6 +252,85 @@ function updateLegendLabel()
 		}
 	});
 }
+
+
+function homegearReadyPostprocesses()
+{
+	var params = [];
+	var chartids = [];
+	for(var i = 0; i < _peerObjects.length; i++)
+	{
+		var peer = _peerObjects[i];
+		if (peer.influxdbQuery.length > 0)
+		{
+			params.push({ methodName: 'influxdbQuery', params: [false, peer.influxdbQuery] });
+			chartids.push(peer.elementid);
+		}
+	}
+	
+	if (params.length > 1)
+	{
+		//todo: system.multicall scheint influxdbquery nicht zu kennen
+		_homegear.invoke("system.multicall", function(message) {
+			for(var i = 0; i < message.result.length; i++)
+			{
+				var variableValue = message.result[i];
+				console.log(message);
+			}
+		}, params);
+	}
+	else
+	{
+		_homegear.invoke(params[0].methodName, function(message) {
+			for(var i = 0; i < message.result.results[0].series[0].values.length; i++) {
+				message.result.results[0].series[0].values[i][0] = (new Date(message.result.results[0].series[0].values[i][0])).getTime();
+			}
+			chartid = chartids[0];
+			for(var x = 0; x < _charts.length; x++)
+			{
+				if (_charts[x].name == chartid)
+					_charts[x].chart.series[0].setData(message.result.results[0].series[0].values);
+			}
+		}, params[0].params[0], params[0].params[1]);
+	}
+	
+	setTimeout("homegearReadyPostprocesses();", 60000);
+}
+
+		
+function handleHomegearValueChanged(peer, variableValue)
+{
+	if (peer.elementType == _elementTypes.slider)
+	{
+		$("#" + peer.elementid).val(variableValue);
+		$("#" + peer.elementid).parent().find('output').val(variableValue + " %");
+	}
+	else if (peer.elementType == _elementTypes.switchButton)
+		$("#" + peer.elementid).switchButton({ checked: variableValue });
+	else if (peer.elementType == _elementTypes.knob)
+		$("#" + peer.elementid).val(variableValue).trigger('change');
+	else if (peer.elementType == _elementTypes.lightbulbSwitch)
+	{
+		if (variableValue)
+			$("#" + peer.elementid).css('color', _colorlightbulbSwitchActive);
+		else
+			$("#" + peer.elementid).css('color', _colorlightbulbSwitchInActive);
+	}
+	else if (peer.elementType == _elementTypes.text)
+	{
+		var suffix = $("#" + peer.elementid).data("suffix");
+		var decimals = $("#" + peer.elementid).data("decimals");
+		
+		if (decimals !== undefined)
+			variableValue = variableValue.toFixed(Number(decimals));;
+		if (suffix !== undefined)
+			variableValue += suffix;
+		$("#" + peer.elementid).text(variableValue);
+	}
+	else
+		$("#" + peer.elementid).val(variableValue);
+}
+
 
 function getdatum(date = new Date())
 {

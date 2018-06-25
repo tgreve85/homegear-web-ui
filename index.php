@@ -71,6 +71,7 @@ if(!$user->checkAuth(true)) die();
 		<script type="text/javascript">
 			var _homegear;
 			var _initValues = true;
+			var _charts = [];
 			var _WirkleistungEinspeisungChart;
 			var _highchartsTimezoneOffset = <?php print (-1 * (timezone_offset_get(new DateTimeZone("Europe/Berlin"), new DateTime("now")) / 60)); ?>;
 			
@@ -123,21 +124,11 @@ if(!$user->checkAuth(true)) die();
 						handleHomegearValueChanged(peer, variableValue);
 					}
 					setInterval("$('#uhrzeit').text(getdatum());", 1000);
+					homegearReadyPostprocesses();
 					_initValues = false;
 				}, params);
 				
-				update_WirkleistungEinspeisungChart();
-				setInterval("update_WirkleistungEinspeisungChart();", 60000);
-			}
-			
-			function update_WirkleistungEinspeisungChart()
-			{
-				_homegear.invoke("influxdbQuery", function(message) {
-					for(var i = 0; i < message.result.results[0].series[0].values.length; i++) {
-						message.result.results[0].series[0].values[i][0] = (new Date(message.result.results[0].series[0].values[i][0])).getTime();
-					}
-					_WirkleistungEinspeisungChart.series[0].setData(message.result.results[0].series[0].values);
-				}, false, 'SELECT mean("value") FROM "Wirkleistung_Gesamt" WHERE time >= now() - 1d GROUP BY time(1m);');
+				
 			}
 			
 			function homegearEvent(message)
@@ -188,85 +179,6 @@ if(!$user->checkAuth(true)) die();
 				});
 				_homegear.event(homegearEvent);
 				_homegear.connect();
-
-				_WirkleistungEinspeisungChart = Highcharts.chart('WirkleistungEinspeisungChart--1-0', {
-					chart: {
-						zoomType: 'x',
-						events: {
-							load: updateLegendLabel
-						}
-					},
-					title: {
-						text: 'Leistung letzte 24h'
-					},
-					xAxis: {
-						type: 'datetime',
-						dateTimeLabelFormats: {
-							millisecond: '%H: %M: %S.%L',
-							second: '%H: %M: %S',
-							minute: '%H: %M',
-							hour: '%H: %M',
-							day: '%e.%b.',
-							week: '%e.%b.',
-							month: '%b.%y',
-							year: '%Y'
-						},
-						events: {
-							afterSetExtremes: updateLegendLabel
-							/*afterSetExtremes: function(){
-								var extr = this.getExtremes();
-								if(!extr.userMin && !extr.userMax) {
-									$('#WirkleistungEinspeisungChart--1-0 .highcharts-scrollbar').hide();
-								}
-								else {
-									$('#WirkleistungEinspeisungChart--1-0 .highcharts-scrollbar').show();
-								}
-							}*/
-						}
-					},
-					scrollbar: {
-						enabled: true
-					},
-					yAxis: {
-						title: {
-							text: 'Watt'
-						}
-					},
-					tooltip: {
-						formatter: function () {
-							var dimension = this.series.userOptions.dimension;
-							var decimals = Number(this.series.userOptions.decimals);
-							return '<span style="font-size: 0.9em;">' + getdatum(new Date(this.x)) + '</span><br /> ' + 
-									this.series.name + ': ' + '<b>' + Number(this.y).toFixed(decimals) + ' ' + dimension + '</b>'
-						}
-					},
-					legend: {
-						enabled: true,
-						useHTML: true,
-						align: 'left',
-					},
-					mapNavigation: {
-						enableMouseWheelZoom: true
-					},
-					plotOptions: {
-						line: {
-							dataLabels: {
-								enabled: true
-							},
-							enableMouseTracking: false
-						}
-					},
-					time: {
-						timezoneOffset: _highchartsTimezoneOffset
-					},
-					series: [{
-						name: 'Leistung',
-						type: 'spline',
-						dimension: 'W',
-						decimals: 0,
-						data: []
-					}]
-				});
 			});
 		</script>
 	</head>
