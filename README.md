@@ -19,3 +19,10 @@ The login-credentials are the same as in homegear
 After you have completed your setup in config.js, you can reach your web-ui under:
 
 https://homegear-ip:2002/homegear-web-ui
+
+And this is how it looks like:
+
+![homegear-web-ui-screenshot](https://forum.homegear.eu/uploads/default/optimized/1X/353c82ae7584557d6c137446801561ae34f52eb3_1_549x499.PNG)
+
+
+At this time, only one chart is working!
