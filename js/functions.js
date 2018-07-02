@@ -35,6 +35,9 @@ function createRooms()
 			if (peer.influxdbQuery === undefined)
 				_peerObjects[i].influxdbQuery = '';
 			
+			if (peer.selectorOptions === undefined)
+				_peerObjects[i].selectorOptions = { 0: 'Aus', 1: 'Ein' };
+			
 			if ((peer.room == value) && (categories.indexOf(peer.category.name) == -1))
 			{
 				html += '<li ' + (categories.length == 0 ? 'class="active"' : '') + '> <a href="#' + key + peer.category.name + '" data-toggle="tab"><span class="glyphicon ' + peer.category.icon + '"></span> ' + peer.category.name + '</a></li>';
@@ -66,7 +69,7 @@ function createRooms()
 					else if (peer.elementType == _elementTypes.switchButton)
 					{
 						html += '<div class="col-sm-3"> \
-									<div class="form-group buttonSwitch"> \
+									<div class="form-group"> \
 										<label for="' + peer.elementid + '">' + peer.name + ':</label><br /> \
 										<input id="' + peer.elementid + '" class="switchButton" type="checkbox" /> \
 									</div> \
@@ -93,9 +96,9 @@ function createRooms()
 					else if (peer.elementType == _elementTypes.text)
 					{
 						html += '<div class="col-sm-3"> \
-									<div class="form-group buttonSwitch"> \
+									<div class="form-group"> \
 										<label for="' + peer.elementid + '">' + peer.name + ':</label><br /> \
-										<span id="' + peer.elementid + '" data-suffix=" ' + peer.valueDimension + '" data-decimals="' + peer.decimalPoints + '"></span> \
+										<button type="button" class="btn btn-block" id="' + peer.elementid + '" data-suffix=" ' + peer.valueDimension + '" data-decimals="' + peer.decimalPoints + '" style="cursor: default; color: #000; text-shadow: none;"></button> \
 									</div> \
 								</div>';
 					}
@@ -176,6 +179,19 @@ function createRooms()
 											}); \
 											_charts.push({ name: "' + peer.elementid + '", chart: chart }); \
 										</SKRIPT> \
+									</div> \
+								</div>';
+					}
+					else if (peer.elementType == _elementTypes.selector)
+					{
+						html += '<div class="col-sm-3"> \
+									<div class="form-group"> \
+										<label for="' + peer.elementid + '">' + peer.name + ':</label><br /> \
+										<select id="' + peer.elementid + '" class="form-control valueselector">';
+											$.each(peer.selectorOptions, function( key, value ) {
+												html += '<option value="' + key + '">' + value + '</option>';
+											});
+						html += '		</select> \
 									</div> \
 								</div>';
 					}
@@ -322,10 +338,14 @@ function handleHomegearValueChanged(peer, variableValue)
 		var decimals = $("#" + peer.elementid).data("decimals");
 		
 		if (decimals !== undefined)
-			variableValue = variableValue.toFixed(Number(decimals));;
+			variableValue = Number(variableValue).toFixed(Number(decimals));;
 		if (suffix !== undefined)
 			variableValue += suffix;
 		$("#" + peer.elementid).text(variableValue);
+	}
+	else if (peer.elementType == _elementTypes.selector)
+	{
+		$("#" + peer.elementid).val(variableValue);
 	}
 	else
 		$("#" + peer.elementid).val(variableValue);

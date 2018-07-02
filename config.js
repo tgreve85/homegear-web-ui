@@ -5,13 +5,14 @@ _colorlightbulbSwitchActive = 'rgb(247, 201, 41)';
 _colorlightbulbSwitchInActive = 'rgb(200, 200, 200)';
 
 
-_elementTypes = { knob: 0, lightbulbSwitch: 1, switchButton: 2, slider: 3, text: 4, chart: 5 };
+_elementTypes = { knob: 0, lightbulbSwitch: 1, switchButton: 2, slider: 3, text: 4, chart: 5, selector: 6 };
 _rooms =  { Allgemein: 'Allgemein', Esszimmer: 'Esszimmer', Wohnzimmer: 'Wohnzimmer', Kueche: 'Küche' };
 _caterogies = {
 		Uebersicht: { name: 'Übersicht', icon: 'glyphicon-info-sign' },
 		Einstellungen: { name: 'Einstellungen', icon: 'glyphicon-cog' },
 		Beleuchtung: { name: 'Beleuchtung', icon: 'glyphicon-lamp' },
-		Heizung: { name: 'Heizung', icon: 'glyphicon-dashboard' }
+		Heizung: { name: 'Heizung', icon: 'glyphicon-list-alt' },
+		Zaehlerstaende: { name: 'Zählerstände', icon: 'glyphicon-dashboard' }
 	};
 	
 // }}}
@@ -38,6 +39,7 @@ optional parameters for peers:
 	valueDimension:	(String)	the Dimension of the value.						(Default: '')
 	decimalPoints:	(Integer)	the decimalplaces of the value.					(Default: 0)
 	influxdbQuery:	(String)	the influxdb-query for the chart				(Default: '')
+	selectorOptions:(Object)	Options that can be chosen eg: { 0: 'Aus', 1: 'Eco', 2: 'Komfort', 3: 'Boost' }	(Default: { 0: 'Aus', 1: 'Ein' })
 */
 
 
@@ -65,6 +67,56 @@ _peerObjects.push({
 	category: _caterogies.Uebersicht,
 	readOnly: true,
 	valueDimension: 'W'
+});
+
+_peerObjects.push({
+	name: 'Wasserzähler',
+	id: 0,
+	channel: -1,
+	variableName: 'Wasserzaehler',
+	elementType: _elementTypes.text,
+	room: _rooms.Allgemein,
+	category: _caterogies.Zaehlerstaende,
+	readOnly: true,
+	decimalPoints: 2,
+	valueDimension: 'm³'
+});
+
+_peerObjects.push({
+	name: 'Gaszähler',
+	id: 0,
+	channel: -1,
+	variableName: 'Gaszaehler',
+	elementType: _elementTypes.text,
+	room: _rooms.Allgemein,
+	category: _caterogies.Zaehlerstaende,
+	readOnly: true,
+	decimalPoints: 2,
+	valueDimension: 'm³'
+});
+
+_peerObjects.push({
+	name: 'Stromzähler',
+	id: 0,
+	channel: -1,
+	variableName: 'StromzaehlerEinspeisung',
+	elementType: _elementTypes.text,
+	room: _rooms.Allgemein,
+	category: _caterogies.Zaehlerstaende,
+	readOnly: true,
+	decimalPoints: 2,
+	valueDimension: 'kWh'
+});
+
+_peerObjects.push({
+	name: 'Testauswahl',
+	id: 0,
+	channel: -1,
+	variableName: 'Testauswahl',
+	elementType: _elementTypes.selector,
+	room: _rooms.Allgemein,
+	category: _caterogies.Zaehlerstaende,
+	selectorOptions: { 0: 'Aus', 1: 'Eco', 2: 'Komfort', 3: 'Boost' }
 });
 
 _peerObjects.push({

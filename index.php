@@ -49,7 +49,7 @@ if(!$user->checkAuth(true)) die();
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="">
 		<meta name="author" content="">
-		<title>Smart Uferstraße</title>
+		<title>Homegear - SmartHome</title>
 		<!--link href="bootstrap/css/bootstrap.min.css" rel="stylesheet"-->
 		<link href="bootstrap/css/theme.min.css" rel="stylesheet">
 		<link href="css/bootstrap.range.slider.css" rel="stylesheet">
