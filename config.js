@@ -7,14 +7,16 @@ _colorlightbulbSwitchInActive = 'rgb(200, 200, 200)';
 
 _elementTypes = { knob: 0, lightbulbSwitch: 1, switchButton: 2, slider: 3, text: 4, chart: 5, selector: 6 };
 _rooms =  { Allgemein: 'Allgemein', Esszimmer: 'Esszimmer', Wohnzimmer: 'Wohnzimmer', Kueche: 'Küche' };
+
+// icons must be font-awesome-icons.
+// you can find them on https://fontawesome.com/icons?d=gallery&m=free
 _caterogies = {
-		Uebersicht: { name: 'Übersicht', icon: 'glyphicon-info-sign' },
-		Einstellungen: { name: 'Einstellungen', icon: 'glyphicon-cog' },
-		Beleuchtung: { name: 'Beleuchtung', icon: 'glyphicon-lamp' },
-		Heizung: { name: 'Heizung', icon: 'glyphicon-list-alt' },
-		Zaehlerstaende: { name: 'Zählerstände', icon: 'glyphicon-dashboard' }
-	};
-	
+	Uebersicht: { name: 'Übersicht', icon: 'fab fa-wpexplorer' },
+	Einstellungen: { name: 'Einstellungen', icon: 'fas fa-cog' },
+	Beleuchtung: { name: 'Beleuchtung', icon: 'far fa-lightbulb' },
+	Heizung: { name: 'Heizung', icon: 'fas fa-fire' },
+	Zaehlerstaende: { name: 'Zählerstände', icon: 'fas fa-chart-line' }
+};	
 // }}}
 
 
@@ -40,6 +42,7 @@ optional parameters for peers:
 	decimalPoints:	(Integer)	the decimalplaces of the value.					(Default: 0)
 	influxdbQuery:	(String)	the influxdb-query for the chart				(Default: '')
 	selectorOptions:(Object)	Options that can be chosen eg: { 0: 'Aus', 1: 'Eco', 2: 'Komfort', 3: 'Boost' }	(Default: { 0: 'Aus', 1: 'Ein' })
+	lineBreak:		(Boolean)	force linebreak after this element				(Default: false)
 */
 
 
@@ -54,7 +57,8 @@ _peerObjects.push({
 	variableName: 'EcoMode',
 	elementType: _elementTypes.switchButton,
 	room: _rooms.Allgemein,
-	category: _caterogies.Uebersicht
+	category: _caterogies.Uebersicht,
+	lineBreak: true
 });
 
 _peerObjects.push({
@@ -142,7 +146,7 @@ _peerObjects.push({
 	room: _rooms.Allgemein,
 	category: _caterogies.Uebersicht,
 	readOnly: true,
-	valueDimension: '%'
+	valueDimension: '%',
 });
 
 _peerObjects.push({

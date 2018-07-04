@@ -38,9 +38,12 @@ function createRooms()
 			if (peer.selectorOptions === undefined)
 				_peerObjects[i].selectorOptions = { 0: 'Aus', 1: 'Ein' };
 			
+			if (peer.lineBreak === undefined)
+				_peerObjects[i].lineBreak = false;
+			
 			if ((peer.room == value) && (categories.indexOf(peer.category.name) == -1))
 			{
-				html += '<li ' + (categories.length == 0 ? 'class="active"' : '') + '> <a href="#' + key + peer.category.name + '" data-toggle="tab"><span class="glyphicon ' + peer.category.icon + '"></span> ' + peer.category.name + '</a></li>';
+				html += '<li ' + (categories.length == 0 ? 'class="active"' : '') + '> <a href="#' + key + peer.category.name + '" data-toggle="tab"><i class="' + peer.category.icon + '"></i> ' + peer.category.name + '</a></li>';
 				categories.push(peer.category.name);
 			}
 		}
@@ -68,7 +71,7 @@ function createRooms()
 					}
 					else if (peer.elementType == _elementTypes.switchButton)
 					{
-						html += '<div class="col-sm-3"> \
+						html += '<div class="col-sm-2 col-xs-6"> \
 									<div class="form-group"> \
 										<label for="' + peer.elementid + '">' + peer.name + ':</label><br /> \
 										<input id="' + peer.elementid + '" class="switchButton" type="checkbox" /> \
@@ -95,7 +98,7 @@ function createRooms()
 					}
 					else if (peer.elementType == _elementTypes.text)
 					{
-						html += '<div class="col-sm-3"> \
+						html += '<div class="col-sm-3 col-xs-6"> \
 									<div class="form-group"> \
 										<label for="' + peer.elementid + '">' + peer.name + ':</label><br /> \
 										<button type="button" class="btn btn-block" id="' + peer.elementid + '" data-suffix=" ' + peer.valueDimension + '" data-decimals="' + peer.decimalPoints + '" style="cursor: default; color: #000; text-shadow: none;"></button> \
@@ -104,87 +107,85 @@ function createRooms()
 					}
 					else if (peer.elementType == _elementTypes.chart)
 					{
-						html += '<div class="col-sm-6"> \
-									<div class="form-group"> \
-										<div id="' + peer.elementid + '" style="width: 100%; height: 300px;"></div> \
-										<SKRIPT type="text/javascript"> \
-											var chart = Highcharts.chart("' + peer.elementid + '", { \
-												chart: { \
-													zoomType: "x", \
-													events: { \
-														load: updateLegendLabel \
-													} \
+						html += '<div class="col-xs-12"> \
+									<div id="' + peer.elementid + '" style="width: 100%; height: 300px;"></div> \
+									<SKRIPT type="text/javascript"> \
+										var chart = Highcharts.chart("' + peer.elementid + '", { \
+											chart: { \
+												zoomType: "x", \
+												events: { \
+													load: updateLegendLabel \
+												} \
+											}, \
+											title: { \
+												text: "' + peer.name + '" \
+											}, \
+											xAxis: { \
+												type: "datetime", \
+												dateTimeLabelFormats: { \
+													millisecond: "%H: %M: %S.%L", \
+													second: "%H: %M: %S", \
+													minute: "%H: %M", \
+													hour: "%H: %M", \
+													day: "%e.%b.", \
+													week: "%e.%b.", \
+													month: "%b.%y", \
+													year: "%Y" \
 												}, \
+												events: { \
+													afterSetExtremes: updateLegendLabel \
+												} \
+											}, \
+											scrollbar: { \
+												enabled: true \
+											}, \
+											yAxis: { \
 												title: { \
-													text: "' + peer.name + '" \
-												}, \
-												xAxis: { \
-													type: "datetime", \
-													dateTimeLabelFormats: { \
-														millisecond: "%H: %M: %S.%L", \
-														second: "%H: %M: %S", \
-														minute: "%H: %M", \
-														hour: "%H: %M", \
-														day: "%e.%b.", \
-														week: "%e.%b.", \
-														month: "%b.%y", \
-														year: "%Y" \
+													text: "' + peer.valueDimension + '" \
+												} \
+											}, \
+											tooltip: { \
+												formatter: function () { \
+													var dimension = this.series.userOptions.dimension; \
+													var decimals = Number(this.series.userOptions.decimals); \
+													return \'<span style="font-size: 0.9em;">\' + getdatum(new Date(this.x)) + \'</span><br /> \' + \
+															this.series.name + \': \' + \'<b>\' + Number(this.y).toFixed(decimals) + \' \' + dimension + \'</b>\' \
+												} \
+											}, \
+											legend: { \
+												enabled: true, \
+												useHTML: true, \
+												align: "left", \
+											}, \
+											mapNavigation: { \
+												enableMouseWheelZoom: true \
+											}, \
+											plotOptions: { \
+												line: { \
+													dataLabels: { \
+														enabled: true \
 													}, \
-													events: { \
-														afterSetExtremes: updateLegendLabel \
-													} \
-												}, \
-												scrollbar: { \
-													enabled: true \
-												}, \
-												yAxis: { \
-													title: { \
-														text: "' + peer.valueDimension + '" \
-													} \
-												}, \
-												tooltip: { \
-													formatter: function () { \
-														var dimension = this.series.userOptions.dimension; \
-														var decimals = Number(this.series.userOptions.decimals); \
-														return \'<span style="font-size: 0.9em;">\' + getdatum(new Date(this.x)) + \'</span><br /> \' + \
-																this.series.name + \': \' + \'<b>\' + Number(this.y).toFixed(decimals) + \' \' + dimension + \'</b>\' \
-													} \
-												}, \
-												legend: { \
-													enabled: true, \
-													useHTML: true, \
-													align: "left", \
-												}, \
-												mapNavigation: { \
-													enableMouseWheelZoom: true \
-												}, \
-												plotOptions: { \
-													line: { \
-														dataLabels: { \
-															enabled: true \
-														}, \
-														enableMouseTracking: false \
-													} \
-												}, \
-												time: { \
-													timezoneOffset: _highchartsTimezoneOffset \
-												}, \
-												series: [{ \
-													name: "' + peer.name + '", \
-													type: "spline", \
-													dimension: "' + peer.valueDimension + '", \
-													decimals: ' + peer.decimalPoints + ', \
-													data: [] \
-												}] \
-											}); \
-											_charts.push({ name: "' + peer.elementid + '", chart: chart }); \
-										</SKRIPT> \
-									</div> \
+													enableMouseTracking: false \
+												} \
+											}, \
+											time: { \
+												timezoneOffset: _highchartsTimezoneOffset \
+											}, \
+											series: [{ \
+												name: "' + peer.name + '", \
+												type: "spline", \
+												dimension: "' + peer.valueDimension + '", \
+												decimals: ' + peer.decimalPoints + ', \
+												data: [] \
+											}] \
+										}); \
+										_charts.push({ name: "' + peer.elementid + '", chart: chart }); \
+									</SKRIPT> \
 								</div>';
 					}
 					else if (peer.elementType == _elementTypes.selector)
 					{
-						html += '<div class="col-sm-3"> \
+						html += '<div class="col-sm-3 col-xs-6"> \
 									<div class="form-group"> \
 										<label for="' + peer.elementid + '">' + peer.name + ':</label><br /> \
 										<select id="' + peer.elementid + '" class="form-control valueselector">';
@@ -198,6 +199,9 @@ function createRooms()
 					else
 					{
 					}
+					
+					if (peer.lineBreak)
+						html += '</div><div class="row">';
 				}
 			}
 			html += '	</div> \

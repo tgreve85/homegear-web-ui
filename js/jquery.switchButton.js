@@ -111,74 +111,74 @@
             if (this.options.show_labels) {
                 this.off_label.show();
                 this.on_label.show();
+				
+				// Move labels around depending on labels_placement option
+				switch(this.options.labels_placement) {
+					case "both":
+					{
+						// Don't move anything if labels are already in place
+						if(this.button_bg.prev() !== this.off_label || this.button_bg.next() !== this.on_label)
+						{
+							// Detach labels form DOM and place them correctly
+							this.off_label.detach();
+							this.on_label.detach();
+							this.off_label.insertBefore(this.button_bg);
+							this.on_label.insertAfter(this.button_bg);
+
+							// Update label classes
+							this.on_label.addClass(this.options.checked ? "on" : "off").removeClass(this.options.checked ? "off" : "on");
+							this.off_label.addClass(this.options.checked ? "off" : "on").removeClass(this.options.checked ? "on" : "off");
+
+						}
+						break;
+					}
+
+					case "left":
+					{
+						// Don't move anything if labels are already in place
+						if(this.button_bg.prev() !== this.on_label || this.on_label.prev() !== this.off_label)
+						{
+							// Detach labels form DOM and place them correctly
+							this.off_label.detach();
+							this.on_label.detach();
+							this.off_label.insertBefore(this.button_bg);
+							this.on_label.insertBefore(this.button_bg);
+
+							// update label classes
+							this.on_label.addClass("on").removeClass("off");
+							this.off_label.addClass("off").removeClass("on");
+						}
+						break;
+					}
+
+					case "right":
+					{
+						// Don't move anything if labels are already in place
+						if(this.button_bg.next() !== this.off_label || this.off_label.next() !== this.on_label)
+						{
+							// Detach labels form DOM and place them correctly
+							this.off_label.detach();
+							this.on_label.detach();
+							this.off_label.insertAfter(this.button_bg);
+							this.on_label.insertAfter(this.off_label);
+
+							// update label classes
+							this.on_label.addClass("on").removeClass("off");
+							this.off_label.addClass("off").removeClass("on");
+						}
+						break;
+					}
+
+				}
+
+				// Refresh labels texts
+				this.on_label.html(this.options.on_label);
+				this.off_label.html(this.options.off_label);
             }
             else {
                 this.off_label.hide();
                 this.on_label.hide();
             }
-
-            // Move labels around depending on labels_placement option
-            switch(this.options.labels_placement) {
-                case "both":
-                {
-                    // Don't move anything if labels are already in place
-                    if(this.button_bg.prev() !== this.off_label || this.button_bg.next() !== this.on_label)
-                    {
-                        // Detach labels form DOM and place them correctly
-                        this.off_label.detach();
-                        this.on_label.detach();
-                        this.off_label.insertBefore(this.button_bg);
-                        this.on_label.insertAfter(this.button_bg);
-
-                        // Update label classes
-                        this.on_label.addClass(this.options.checked ? "on" : "off").removeClass(this.options.checked ? "off" : "on");
-                        this.off_label.addClass(this.options.checked ? "off" : "on").removeClass(this.options.checked ? "on" : "off");
-
-                    }
-                    break;
-                }
-
-                case "left":
-                {
-                    // Don't move anything if labels are already in place
-                    if(this.button_bg.prev() !== this.on_label || this.on_label.prev() !== this.off_label)
-                    {
-                        // Detach labels form DOM and place them correctly
-                        this.off_label.detach();
-                        this.on_label.detach();
-                        this.off_label.insertBefore(this.button_bg);
-                        this.on_label.insertBefore(this.button_bg);
-
-                        // update label classes
-                        this.on_label.addClass("on").removeClass("off");
-                        this.off_label.addClass("off").removeClass("on");
-                    }
-                    break;
-                }
-
-                case "right":
-                {
-                    // Don't move anything if labels are already in place
-                    if(this.button_bg.next() !== this.off_label || this.off_label.next() !== this.on_label)
-                    {
-                        // Detach labels form DOM and place them correctly
-                        this.off_label.detach();
-                        this.on_label.detach();
-                        this.off_label.insertAfter(this.button_bg);
-                        this.on_label.insertAfter(this.off_label);
-
-                        // update label classes
-                        this.on_label.addClass("on").removeClass("off");
-                        this.off_label.addClass("off").removeClass("on");
-                    }
-                    break;
-                }
-
-            }
-
-            // Refresh labels texts
-            this.on_label.html(this.options.on_label);
-            this.off_label.html(this.options.off_label);
 
             // Refresh button's dimensions
             this.button_bg.width(this.options.width);
@@ -264,7 +264,8 @@
                 else
                 {
                     this.off_label.hide();
-                    this.on_label.show();
+					if (this.options.show_labels)
+						this.on_label.show();
                 }
 
             }
@@ -282,7 +283,8 @@
                 }
                 else
                 {
-                    this.off_label.show();
+					if (this.options.show_labels)
+						this.off_label.show();
                     this.on_label.hide();
                 }
             }

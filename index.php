@@ -66,7 +66,6 @@ if(!$user->checkAuth(true)) die();
 		<script type="text/javascript" src="js/highcharts/theme.js"></script>
 		</script><!--[if IE]><script type="text/javascript" src="js/excanvas.js"></script><![endif]-->
 		<script src="js/jquery.knob.min.js"></script>
-		<!--script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js" integrity="sha384-xymdQtn1n3lH2wcu0qhcdaOpQwyoarkgLVxC/wZ5q7h9gHtxICrpcaSUfygqZGOe" crossorigin="anonymous"></script-->
 		<script defer src="fontawesome-free-5.1.0-web/js/all.js"></script>
 		<script type="text/javascript">
 			var _homegear;

@@ -2,11 +2,12 @@
 
 $("input[type=checkbox]").switchButton({
 	labels_placement: "right",
-	width: 100,
-	height: 25,
+	width: '100%',
+	height: 34,
+	show_labels: false,
 	on_label: 'Ein',
 	off_label: 'Aus',
-	button_width: 40
+	button_width: 60
 });
 
 
