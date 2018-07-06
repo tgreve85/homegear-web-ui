@@ -299,7 +299,7 @@ function homegearReadyPostprocesses()
 			}
 		}, params);
 	}
-	else
+	else if (params.length == 0)
 	{
 		_homegear.invoke(params[0].methodName, function(message) {
 			for(var i = 0; i < message.result.results[0].series[0].values.length; i++) {
