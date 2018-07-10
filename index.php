@@ -71,7 +71,6 @@ if(!$user->checkAuth(true)) die();
 			var _homegear;
 			var _initValues = true;
 			var _charts = [];
-			var _WirkleistungEinspeisungChart;
 			var _highchartsTimezoneOffset = <?php print (-1 * (timezone_offset_get(new DateTimeZone("Europe/Berlin"), new DateTime("now")) / 60)); ?>;
 			
 			var _colorlightbulbSwitchActive = 'rgb(247, 201, 41)';
@@ -87,6 +86,7 @@ if(!$user->checkAuth(true)) die();
 			var _peerObjects = [];
 			<?php
 			include("config.js");
+			include("variableConfig.js");
 			include("js/functions.js");
 			?>
 			

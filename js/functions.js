@@ -14,6 +14,8 @@ function createRooms()
 		{
 			var peer = _peerObjects[i];
 			_peerObjects[i].elementid = peer.variableName + '-' + peer.channel + '-' + peer.id;
+			//_peerObjects[i].elementid = 'ID_' + (Date.now().toString() + '_' + Math.random().toString(36).slice(2)).toUpperCase();
+			
 			if (peer.valueMin === undefined)
 				_peerObjects[i].valueMin = 0;
 			
@@ -64,7 +66,7 @@ function createRooms()
 						html += '<div class="col-sm-6"> \
 									<label for="' + peer.elementid + '">' + peer.name + ':</label> \
 									<div class="range"> \
-										<input type="range" class="slider" id="' + peer.elementid + '" min="' + peer.valueMin + '" max="' + peer.valueMax + '" value="0"> \
+										<input type="range" class="slider" id="' + peer.elementid + '" data-dimension=" ' + peer.valueDimension + '" data-decimals="' + peer.decimalPoints + '" min="' + peer.valueMin + '" max="' + peer.valueMax + '" value="0"> \
 										<output>0</output> \
 									</div> \
 								</div>';
@@ -101,7 +103,7 @@ function createRooms()
 						html += '<div class="col-sm-3 col-xs-6"> \
 									<div class="form-group"> \
 										<label for="' + peer.elementid + '">' + peer.name + ':</label><br /> \
-										<button type="button" class="btn btn-block" id="' + peer.elementid + '" data-suffix=" ' + peer.valueDimension + '" data-decimals="' + peer.decimalPoints + '" style="cursor: default; color: #000; text-shadow: none;"></button> \
+										<button type="button" class="btn btn-block" id="' + peer.elementid + '" data-dimension=" ' + peer.valueDimension + '" data-decimals="' + peer.decimalPoints + '" style="cursor: default; color: #000; text-shadow: none;"></button> \
 									</div> \
 								</div>';
 					}
@@ -193,6 +195,15 @@ function createRooms()
 												html += '<option value="' + key + '">' + value + '</option>';
 											});
 						html += '		</select> \
+									</div> \
+								</div>';
+					}
+					else if (peer.elementType == _elementTypes.windowSwitch)
+					{
+						html += '<div class="col-sm-3 col-xs-6"> \
+									<div class="form-group"> \
+										<label for="' + peer.elementid + '">' + peer.name + ':</label><br /> \
+										<button type="button" class="btn btn-block" id="' + peer.elementid + '" data-dimension=" ' + peer.valueDimension + '" data-decimals="' + peer.decimalPoints + '" style="cursor: default; color: #000; text-shadow: none;"></button> \
 									</div> \
 								</div>';
 					}
@@ -320,39 +331,52 @@ function homegearReadyPostprocesses()
 		
 function handleHomegearValueChanged(peer, variableValue)
 {
+	var $element = $("#" + peer.elementid);
+	
 	if (peer.elementType == _elementTypes.slider)
 	{
-		$("#" + peer.elementid).val(variableValue);
-		$("#" + peer.elementid).parent().find('output').val(variableValue + " %");
-	}
-	else if (peer.elementType == _elementTypes.switchButton)
-		$("#" + peer.elementid).switchButton({ checked: variableValue });
-	else if (peer.elementType == _elementTypes.knob)
-		$("#" + peer.elementid).val(variableValue).trigger('change');
-	else if (peer.elementType == _elementTypes.lightbulbSwitch)
-	{
-		if (variableValue)
-			$("#" + peer.elementid).css('color', _colorlightbulbSwitchActive);
-		else
-			$("#" + peer.elementid).css('color', _colorlightbulbSwitchInActive);
-	}
-	else if (peer.elementType == _elementTypes.text)
-	{
-		var suffix = $("#" + peer.elementid).data("suffix");
-		var decimals = $("#" + peer.elementid).data("decimals");
+		$element.val(variableValue);
+		var dimension = $element.data("dimension");
+		var decimals = $element.data("decimals");
 		
 		if (decimals !== undefined)
 			variableValue = Number(variableValue).toFixed(Number(decimals));;
-		if (suffix !== undefined)
-			variableValue += suffix;
-		$("#" + peer.elementid).text(variableValue);
+		if (dimension !== undefined)
+			variableValue += dimension;
+		$element.parent().find('output').val(variableValue);
+	}
+	else if (peer.elementType == _elementTypes.switchButton)
+		$element.switchButton({ checked: variableValue });
+	else if (peer.elementType == _elementTypes.knob)
+		$element.val(variableValue).trigger('change');
+	else if (peer.elementType == _elementTypes.lightbulbSwitch)
+	{
+		if (variableValue)
+			$element.css('color', _colorlightbulbSwitchActive);
+		else
+			$element.css('color', _colorlightbulbSwitchInActive);
+	}
+	else if (peer.elementType == _elementTypes.text)
+	{
+		var dimension = $element.data("dimension");
+		var decimals = $element.data("decimals");
+		
+		if (decimals !== undefined)
+			variableValue = Number(variableValue).toFixed(Number(decimals));;
+		if (dimension !== undefined)
+			variableValue += dimension;
+		$element.text(variableValue);
 	}
 	else if (peer.elementType == _elementTypes.selector)
 	{
-		$("#" + peer.elementid).val(variableValue);
+		$element.val(variableValue);
+	}
+	else if (peer.elementType == _elementTypes.windowSwitch)
+	{
+		$element.text(variableValue);
 	}
 	else
-		$("#" + peer.elementid).val(variableValue);
+		$element.val(variableValue);
 }
 
 
