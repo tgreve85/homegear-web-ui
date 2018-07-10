@@ -16,7 +16,19 @@ The login-credentials are the same as in homegear
 
 (default: homegear:homegear)
 
-After you have completed your setup in config.js, you can reach your web-ui under:
+
+To configure the rooms and categories, edit the config.js:
+```
+nano /var/lib/homegear/www/rpc/homegear-web-ui/config.js
+```
+
+To configure the ui-elements, edit the variableConfig.js:
+```
+nano /var/lib/homegear/www/rpc/homegear-web-ui/variableConfig.js
+```
+
+
+After you have completed your setup in config.js and variableConfig, you can reach your web-ui under:
 
 https://homegear-ip:2002/homegear-web-ui
 
