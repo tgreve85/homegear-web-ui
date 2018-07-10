@@ -252,8 +252,8 @@
                 this.element.prop("checked", true);
                 this.element.change();
 
-                var dLeft = this.options.width - this.options.button_width;
-                newLeft = "+=" + dLeft;
+                var dLeft = parseInt(this.options.width) - parseInt(this.options.button_width);
+                newLeft = "+=" + dLeft + "%";
 
                 // Update labels states
                 if(this.options.labels_placement == "both")

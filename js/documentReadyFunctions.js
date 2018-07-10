@@ -1,13 +1,13 @@
 
 
-$("input[type=checkbox]").switchButton({
+$(".switchButton").switchButton({
 	labels_placement: "right",
 	width: '100%',
 	height: 34,
 	show_labels: false,
 	on_label: 'Ein',
 	off_label: 'Aus',
-	button_width: 60
+	button_width: '40%'
 });
 
 
@@ -39,11 +39,13 @@ $(".slider").change(function() {
 	setUiControl(id, value);
 });
 
+
 $(".switchButton").change(function() {
 	var id = $(this).attr('id');
 	setUiControl(id, $(this).prop('checked'));
 });
 
+		
 $('.lightbulbSwitch').on('click', '[data-fa-i2svg]', function () {
 	var id = $(this).attr('id');
 	var color = $(this).css('color');
