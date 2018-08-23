@@ -207,6 +207,15 @@ function createRooms()
 									</div> \
 								</div>';
 					}
+					else if (peer.elementType == _elementTypes.colorSelector)
+					{
+						html += '<div class="col-lg-3 col-sm-6 col-xs-12"> \
+									<div class="form-group"> \
+										<label for="' + peer.elementid + '">' + peer.name + ':</label><br /> \
+										<input class="colorPicker" id="' + peer.elementid + '" type="text" /> \
+									</div> \
+								</div>';
+					}
 					else
 					{
 					}
@@ -374,6 +383,10 @@ function handleHomegearValueChanged(peer, variableValue)
 	else if (peer.elementType == _elementTypes.windowSwitch)
 	{
 		$element.text(variableValue);
+	}
+	else if (peer.elementType == _elementTypes.colorSelector)
+	{
+		$element.spectrum("set", variableValue);
 	}
 	else
 		$element.val(variableValue);

@@ -13,7 +13,8 @@ _elementTypes = {
 	text: 4,
 	chart: 5,
 	selector: 6,
-	windowSwitch: 7
+	windowSwitch: 7,
+	colorSelector: 8
 };
 
 _rooms =  {
@@ -31,7 +32,8 @@ _caterogies = {
 	Beleuchtung: { name: 'Beleuchtung', icon: 'far fa-lightbulb' },
 	Heizung: { name: 'Heizung', icon: 'fas fa-fire' },
 	Zaehlerstaende: { name: 'Zählerstände', icon: 'fas fa-chart-line' },
-	Fensterstatus: { name: 'Fenster', icon: 'fas fa-chalkboard-teacher' }
+	Fensterstatus: { name: 'Fenster', icon: 'fas fa-chalkboard-teacher' },
+	Aussenbeleuchtung: { name: 'Außenbeleuchtung', icon: 'far fa-lightbulb' }
 };	
 // }}}
 

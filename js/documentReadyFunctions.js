@@ -10,6 +10,16 @@ $(".switchButton").switchButton({
 	button_width: '40%'
 });
 
+$('.colorPicker').spectrum({
+	theme: "sp-dark",
+	flat: true,
+	showButtons: false,
+    showInput: false
+});
+$('.colorPicker').on("dragstop.spectrum", function(e, color) {
+	var id = this.id;
+	setUiControl(id, color.toHexString());
+});
 
 $(".knobTemperature").knob({
 	release: function (value) {

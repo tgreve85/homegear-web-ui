@@ -37,6 +37,17 @@ _peerObjects.push({
 });
 
 _peerObjects.push({
+	name: 'RGB-Test',
+	id: 0,
+	channel: -1,
+	variableName: 'rgb',
+	elementType: _elementTypes.colorSelector,
+	room: _rooms.Allgemein,
+	category: _caterogies.Uebersicht,
+	lineBreak: true
+});
+
+_peerObjects.push({
 	name: 'Akt. Leistung',
 	id: 0,
 	channel: -1,
@@ -225,6 +236,46 @@ _peerObjects.push({
 	room: _rooms.Allgemein,
 	category: _caterogies.Fensterstatus,
 	readOnly: true
+});
+
+_peerObjects.push({
+	name: 'Lichterkette Terrasse',
+	id: 71,
+	channel: 1,
+	variableName: 'STATE',
+	elementType: _elementTypes.switchButton,
+	room: _rooms.Allgemein,
+	category: _caterogies.Aussenbeleuchtung
+});
+
+_peerObjects.push({
+	name: 'Laterne Terrasse',
+	id: 71,
+	channel: 2,
+	variableName: 'STATE',
+	elementType: _elementTypes.switchButton,
+	room: _rooms.Allgemein,
+	category: _caterogies.Aussenbeleuchtung
+});
+
+_peerObjects.push({
+	name: 'Laterne Innenhof',
+	id: 72,
+	channel: 2,
+	variableName: 'STATE',
+	elementType: _elementTypes.switchButton,
+	room: _rooms.Allgemein,
+	category: _caterogies.Aussenbeleuchtung
+});
+
+_peerObjects.push({
+	name: 'Flutlicht Einfahrt',
+	id: 86,
+	channel: 1,
+	variableName: 'STATE',
+	elementType: _elementTypes.switchButton,
+	room: _rooms.Allgemein,
+	category: _caterogies.Aussenbeleuchtung
 });
 
 // Übersicht }}}

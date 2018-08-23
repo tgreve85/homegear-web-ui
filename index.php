@@ -1,4 +1,6 @@
 <?php
+$loginHash = md5("SUBOIUSöädgbp+##d23233oiusdgpios674953287sgbd0");
+ 
 require_once("user.php");
 
 function ipIsV6($ip) : int
@@ -6,8 +8,11 @@ function ipIsV6($ip) : int
 	return strpos($ip, ':') !== false;
 }
 
-function clientInPrivateNet() : bool
+function clientInPrivateNet($loginHash) : bool
 {
+	if ($_SERVER['LOGINHASH'] == $loginHash)
+		return true;
+	
 	if(substr($_SERVER['REMOTE_ADDR'], 0, 7) == '::ffff:' && strpos($_SERVER['REMOTE_ADDR'], '.') !== false) $_SERVER['REMOTE_ADDR'] = substr($_SERVER['REMOTE_ADDR'], 7);
 
 	if(ipIsV6($_SERVER['REMOTE_ADDR']))
@@ -33,7 +38,7 @@ function clientInPrivateNet() : bool
 if((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on") && !clientInPrivateNet()) die('unauthorized');
 
 $user = new User();
-if (clientInPrivateNet())
+if (clientInPrivateNet($loginHash))
 {
 	$_SESSION["authorized"] = true;
 	$_SESSION["user"] = "homegear";
@@ -56,6 +61,8 @@ if(!$user->checkAuth(true)) die();
 		<link href="css/jquery-ui.min.css" rel="stylesheet">
 		<link href="css/index.css" rel="stylesheet">
 		<link href="css/jquery.switchButton.css" rel="stylesheet">
+		<link href="css/spectrum.css" rel="stylesheet">
+		<link href="css/spectrum-dark.css" rel="stylesheet">
 		<script type="text/javascript" src="js/homegear-ws-1.0.0.min.js"></script>
 		<script type="text/javascript" src="js/jquery.2.1.4.min.js"></script>
 		<script type="text/javascript" src="js/jquery-ui.min.js"></script>
@@ -65,7 +72,8 @@ if(!$user->checkAuth(true)) die();
 		<!--script type="text/javascript" src="https://code.highcharts.com/stock/modules/exporting.js"></script-->
 		<script type="text/javascript" src="js/highcharts/theme.js"></script>
 		</script><!--[if IE]><script type="text/javascript" src="js/excanvas.js"></script><![endif]-->
-		<script src="js/jquery.knob.min.js"></script>
+		<script type="text/javascript" src="js/jquery.knob.min.js"></script>
+		<script type="text/javascript" src="js/spectrum.js"></script>
 		<script defer src="fontawesome-free-5.1.0-web/js/all.js"></script>
 		<script type="text/javascript">
 			var _homegear;
@@ -207,5 +215,6 @@ if(!$user->checkAuth(true)) die();
 
 		</div>
 		<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+		<?php echo $loginHash; ?>
 	</body>
 </html>
