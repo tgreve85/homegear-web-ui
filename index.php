@@ -1,6 +1,4 @@
 <?php
-$loginHash = md5("SUBOIUSöädgbp+##d23233oiusdgpios674953287sgbd0");
- 
 require_once("user.php");
 
 function ipIsV6($ip) : int
@@ -35,8 +33,17 @@ function clientInPrivateNet($loginHash) : bool
 	}
 }
 
+function getServersUniqueId() : string
+{
+        $result = shell_exec("blkid -o value -s UUID");
+        if(stripos($result,"blkid")!==false)
+                $result = $_SERVER['HTTP_HOST'];
+        return(md5($result));
+}
+
 if((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on") && !clientInPrivateNet()) die('unauthorized');
 
+$loginHash = getServersUniqueId();
 $user = new User();
 if (clientInPrivateNet($loginHash))
 {
