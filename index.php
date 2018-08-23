@@ -10,7 +10,7 @@ function ipIsV6($ip) : int
 
 function clientInPrivateNet($loginHash) : bool
 {
-	if ($_SERVER['LOGINHASH'] == $loginHash)
+	if ($_REQUEST['LOGINHASH'] == $loginHash)
 		return true;
 	
 	if(substr($_SERVER['REMOTE_ADDR'], 0, 7) == '::ffff:' && strpos($_SERVER['REMOTE_ADDR'], '.') !== false) $_SERVER['REMOTE_ADDR'] = substr($_SERVER['REMOTE_ADDR'], 7);
