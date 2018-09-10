@@ -3,6 +3,8 @@
 
 This is a websocket-based visualization for homegear.
 
+You need at least homegear-verison 0.8.0-2335! 
+
 just clone it into `/var/lib/homegear/www/rpc`
 ```
 cd /var/lib/homegear/www/rpc
@@ -30,7 +32,7 @@ nano /var/lib/homegear/www/rpc/homegear-web-ui/variableConfig.js
 
 After you have completed your setup in config.js and variableConfig, you can reach your web-ui under:
 
-https://homegear-ip:2002/homegear-web-ui
+https://[homegear-ip]:2002/homegear-web-ui
 
 And this is how it looks like:
 
