@@ -3,7 +3,7 @@
 
 This is a websocket-based visualization for homegear.
 
-You need at least homegear-verison 0.8.0-2335! 
+You need at least homegear-version 0.8.0-2335! 
 
 just clone it into `/var/lib/homegear/www/rpc`
 ```
