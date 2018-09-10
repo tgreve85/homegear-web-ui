@@ -15,34 +15,34 @@ function createRooms()
 			var peer = _peerObjects[i];
 			_peerObjects[i].elementid = peer.variableName + '-' + peer.channel + '-' + peer.id;
 			//_peerObjects[i].elementid = 'ID_' + (Date.now().toString() + '_' + Math.random().toString(36).slice(2)).toUpperCase();
-			
+
 			if (peer.valueMin === undefined)
 				_peerObjects[i].valueMin = 0;
-			
+
 			if (peer.valueMax === undefined)
 				_peerObjects[i].valueMax = 100;
-			
+
 			if (peer.valueStep === undefined)
 				_peerObjects[i].valueStep = 1;
-			
+
 			if (peer.readOnly === undefined)
 				_peerObjects[i].readOnly = false;
-			
+
 			if (peer.valueDimension === undefined)
 				_peerObjects[i].valueDimension = '';
-			
+
 			if (peer.decimalPoints === undefined)
 				_peerObjects[i].decimalPoints = 0;
-			
+
 			if (peer.influxdbQuery === undefined)
 				_peerObjects[i].influxdbQuery = '';
-			
+
 			if (peer.selectorOptions === undefined)
 				_peerObjects[i].selectorOptions = { 0: 'Aus', 1: 'Ein' };
-			
+
 			if (peer.lineBreak === undefined)
 				_peerObjects[i].lineBreak = false;
-			
+
 			if ((peer.room == value) && (categories.indexOf(peer.category.name) == -1))
 			{
 				html += '<li ' + (categories.length == 0 ? 'class="active"' : '') + '> <a href="#' + key + peer.category.name + '" data-toggle="tab"><i class="' + peer.category.icon + '"></i> ' + peer.category.name + '</a></li>';
@@ -209,8 +209,8 @@ function createRooms()
 					}
 					else if (peer.elementType == _elementTypes.colorSelector)
 					{
-						html += '<div class="col-lg-3 col-sm-6 col-xs-12"> \
-									<div class="form-group"> \
+						html += '<div class="col-xl-3 col-sm-6 col-xs-12"> \
+									<div class="form-group text-center"> \
 										<label for="' + peer.elementid + '">' + peer.name + ':</label><br /> \
 										<input class="colorPicker" id="' + peer.elementid + '" type="text" /> \
 									</div> \
@@ -219,7 +219,7 @@ function createRooms()
 					else
 					{
 					}
-					
+
 					if (peer.lineBreak)
 						html += '</div><div class="row">';
 				}

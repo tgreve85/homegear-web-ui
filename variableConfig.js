@@ -37,17 +37,6 @@ _peerObjects.push({
 });
 
 _peerObjects.push({
-	name: 'RGB-Test',
-	id: 0,
-	channel: -1,
-	variableName: 'rgb',
-	elementType: _elementTypes.colorSelector,
-	room: _rooms.Allgemein,
-	category: _caterogies.Uebersicht,
-	lineBreak: true
-});
-
-_peerObjects.push({
 	name: 'Akt. Leistung',
 	id: 0,
 	channel: -1,
@@ -294,7 +283,7 @@ _peerObjects.push({
 	category: _caterogies.Beleuchtung,
 	valueDimension: '%'
 });
-	
+
 _peerObjects.push({
 	name: 'Helligkeit Nanoleaf',
 	id: 87,
@@ -324,6 +313,38 @@ _peerObjects.push({
 });
 
 _peerObjects.push({
+	name: 'Helligkeit Deckenlampe Spots',
+	id: 64,
+	channel: 1,
+	variableName: 'LEVEL',
+	elementType: _elementTypes.knob,
+	room: _rooms.Wohnzimmer,
+	category: _caterogies.Beleuchtung,
+	valueDimension: '%'
+});
+
+_peerObjects.push({
+	name: 'Helligkeit Deckenlampe Ambilight',
+	id: 91,
+	channel: 1,
+	variableName: 'LEVEL_LINKS',
+	elementType: _elementTypes.knob,
+	room: _rooms.Wohnzimmer,
+	category: _caterogies.Beleuchtung,
+	valueDimension: '%'
+});
+
+_peerObjects.push({
+	name: 'Farbe Deckenlampe Ambilight',
+	id: 0,
+	channel: -1,
+	variableName: 'WohnzimmerDeckenlampeRGB',
+	elementType: _elementTypes.colorSelector,
+	room: _rooms.Wohnzimmer,
+	category: _caterogies.Beleuchtung,
+});
+
+/*_peerObjects.push({
 	name: 'Deckenlampe',
 	id: 12,
 	channel: 2,
@@ -332,7 +353,7 @@ _peerObjects.push({
 	room: _rooms.Wohnzimmer,
 	category: _caterogies.Beleuchtung,
 	valueDimension: '%'
-});
+});*/
 
 _peerObjects.push({
 	name: 'Temperatur',

@@ -34,7 +34,7 @@ _caterogies = {
 	Zaehlerstaende: { name: 'Zählerstände', icon: 'fas fa-chart-line' },
 	Fensterstatus: { name: 'Fenster', icon: 'fas fa-chalkboard-teacher' },
 	Aussenbeleuchtung: { name: 'Außenbeleuchtung', icon: 'far fa-lightbulb' }
-};	
+};
 // }}}
 
 

@@ -1,16 +1,20 @@
 <?php
+//opcache_reset();
+if(!opcache_is_script_cached(__FILE__)) opcache_compile_file(__FILE__);
+if(!opcache_is_script_cached('user.php')) opcache_compile_file('user.php');
+
 require_once("user.php");
+
+if(!$_SERVER['WEBSOCKET_ENABLED']) die('WebSockets are not enabled on this server.');
+if($_SERVER['WEBSOCKET_AUTH_TYPE'] != 'session') die('WebSocket authorization type is not set to "session"');
 
 function ipIsV6($ip) : int
 {
 	return strpos($ip, ':') !== false;
 }
 
-function clientInPrivateNet($loginHash) : bool
+function clientInPrivateNet() : bool
 {
-	if ($_REQUEST['LOGINHASH'] == $loginHash)
-		return true;
-	
 	if(substr($_SERVER['REMOTE_ADDR'], 0, 7) == '::ffff:' && strpos($_SERVER['REMOTE_ADDR'], '.') !== false) $_SERVER['REMOTE_ADDR'] = substr($_SERVER['REMOTE_ADDR'], 7);
 
 	if(ipIsV6($_SERVER['REMOTE_ADDR']))
@@ -33,19 +37,10 @@ function clientInPrivateNet($loginHash) : bool
 	}
 }
 
-function getServersUniqueId() : string
-{
-        $result = shell_exec("blkid -o value -s UUID");
-        if(stripos($result,"blkid")!==false)
-                $result = $_SERVER['HTTP_HOST'];
-        return(md5($result));
-}
-
 if((!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] != "on") && !clientInPrivateNet()) die('unauthorized');
 
-$loginHash = getServersUniqueId();
 $user = new User();
-if (clientInPrivateNet($loginHash))
+if (clientInPrivateNet())
 {
 	$_SESSION["authorized"] = true;
 	$_SESSION["user"] = "homegear";
@@ -87,15 +82,15 @@ if(!$user->checkAuth(true)) die();
 			var _initValues = true;
 			var _charts = [];
 			var _highchartsTimezoneOffset = <?php print (-1 * (timezone_offset_get(new DateTimeZone("Europe/Berlin"), new DateTime("now")) / 60)); ?>;
-			
+
 			var _colorlightbulbSwitchActive = 'rgb(247, 201, 41)';
 			var _colorlightbulbSwitchInActive = 'rgb(200, 200, 200)';
-			
-			
+
+
 			var _elementTypes = { };
 			var _rooms =  { };
 			var _caterogies = { };
-			
+
 			// {{{ Peer-Definition
 
 			var _peerObjects = [];
@@ -104,15 +99,15 @@ if(!$user->checkAuth(true)) die();
 			include("variableConfig.js");
 			include("js/functions.js");
 			?>
-			
-			
+
+
 			function readCookie(key)
 			{
 			    var result;
 			    return (result = new RegExp('(?:^|; )' + encodeURIComponent(key) + '=([^;]*)').exec(document.cookie)) ? (result[1]) : null;
 			}
 
-			
+
 			function homegearReady()
 			{
 				$('.hg-alert-socket-error').remove();
@@ -141,10 +136,10 @@ if(!$user->checkAuth(true)) die();
 					homegearReadyPostprocesses();
 					_initValues = false;
 				}, params);
-				
-				
+
+
 			}
-			
+
 			function homegearEvent(message)
 			{
 				$('#log').html(JSON.stringify(message, null, '\t'));
@@ -165,14 +160,14 @@ if(!$user->checkAuth(true)) die();
 			}
 
 			$(document).ready(function() {
-				
+
 				createRooms();
-				
+
 				<?php
 				include("js/documentReadyFunctions.js");
 				?>
-				
-				
+
+
 				var ssl = window.location.protocol == "https:" ? true : false;
 				var server = window.location.host.substring(0, window.location.host.lastIndexOf(":"));
 				var port = '80';
@@ -222,6 +217,5 @@ if(!$user->checkAuth(true)) die();
 
 		</div>
 		<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-		<?php echo $loginHash; ?>
 	</body>
 </html>
