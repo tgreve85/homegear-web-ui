@@ -65,7 +65,7 @@ if(!$user->checkAuth(true)) die();
 		<link href="css/jquery.switchButton.css" rel="stylesheet">
 		<link href="css/spectrum.css" rel="stylesheet">
 		<link href="css/spectrum-dark.css" rel="stylesheet">
-		<script type="text/javascript" src="js/homegear-ws-1.0.0.min.js"></script>
+		<script type="text/javascript" src="js/homegear-ws-1.0.8.min.js"></script>
 		<script type="text/javascript" src="js/jquery.2.1.4.min.js"></script>
 		<script type="text/javascript" src="js/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="js/jquery.switchButton.js"></script>
